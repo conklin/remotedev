@@ -33,6 +33,10 @@ if [[ $GCP_PROJECT == '' ]] ; then
     echo "Please configure a default project, and compute zone in gcloud"     
 fi
 
+GCP_REGION=`gcloud config list --format 'value(compute.region)' 2>/dev/null`
+if [[ $GCP_REGION == '' ]] ; then
+    echo "Please configure a default gcp region"     
+fi
 
 BUCKET_NAME=`gsutil ls gs:// | grep remote-dev-boot-strapper`
 if [[ $BUCKET_NAME == '' ]] ; then
@@ -40,6 +44,13 @@ if [[ $BUCKET_NAME == '' ]] ; then
     gsutil mb gs://remote-dev-boot-strapper-${UNIQUE_NAME_POST_FIX}
     BUCKET_NAME=`gsutil ls gs:// | grep remote-dev-boot-strapper`
 fi
+
+
+cat > input.tfvars <<EOF
+project_id = "${GCP_PROJECT}"
+remote_dev_boot_strapper_storage_bucket="$BUCKET_NAME"
+compute_region="$GCP_REGION"
+EOF
 
 gcloud services enable cloudbuild.googleapis.com
 
@@ -54,6 +65,7 @@ if [[ $TERRAFORM_IMAGE == '' ]] ; then
     gcloud builds submit --config cloudbuild.yaml .
     cd ../../
 fi
+
 
 
 
