@@ -38,12 +38,16 @@ if [[ $GCP_REGION == '' ]] ; then
     echo "Please configure a default gcp region"     
 fi
 
-BUCKET_NAME=`gsutil ls gs:// | grep remote-dev-boot-strapper`
-if [[ $BUCKET_NAME == '' ]] ; then
+BUCKET_URL=`gsutil ls gs:// | grep remote-dev-boot-strapper`
+if [[ $BUCKET_URL == '' ]] ; then
     UNIQUE_NAME_POST_FIX=`uuidgen |  cut -f5 -d'-'  | tr '[:upper:]' '[:lower:]'`
     gsutil mb gs://remote-dev-boot-strapper-${UNIQUE_NAME_POST_FIX}
-    BUCKET_NAME=`gsutil ls gs:// | grep remote-dev-boot-strapper`
+    BUCKET_URL=`gsutil ls gs:// | grep remote-dev-boot-strapper`
 fi
+
+regex='\/\/(.*)\/'
+[[ $BUCKET_URL =~ $regex ]]
+BUCKET_NAME=${BASH_REMATCH[1]}
 
 
 cat > input.tfvars <<EOF
