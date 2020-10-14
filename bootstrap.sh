@@ -56,10 +56,11 @@ remote_dev_boot_strapper_storage_bucket="$BUCKET_NAME"
 compute_region="$GCP_REGION"
 EOF
 
+
+echo "enabling cloud build apis"
 gcloud services enable cloudbuild.googleapis.com
 
 TERRAFORM_IMAGE=`gcloud container images list --filter terraform`
-
 if [[ $TERRAFORM_IMAGE == '' ]] ; then
     echo "building terraform gcp community builder and publishing"
     mkdir -p tmp
@@ -73,5 +74,22 @@ fi
 
 
 
+echo "a broswer is about is about to open"
+echo "please do the following"
+echo "please add the gcp cloud build app to your git hub account that you used to fork this repo"
+echo "please be sure you added cloud build app to your git hub before continueing"
+echo "please be sure you also accept the terms and conditions in gcp and select gcp project"
+echo "please be sure you connect gcp to the forked remote dev repo"
+echo "please skip defining trigger"
+echo "Press any key to continue"
+read -t 3 -n 1
+python -m webbrowser https://github.com/apps/google-cloud-build
 
+echo "please prease any key to continue affter permission git hub integration"
+read -t 3 -n 1
+
+echo "installing gcloud beta"
+gcloud -q components install beta 
+
+gcloud beta builds triggers create github --repo-name=remotedev --repo-owner=conklin --branch-pattern=".*" --build-config=cloudbuild.yaml
 
