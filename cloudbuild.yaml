@@ -2,6 +2,6 @@ steps:
 - name: 'gcr.io/${PROJECT_ID}/terraform'
   args: ['init']  
 - name: 'gcr.io/${PROJECT_ID}/terraform'
-  args: ['plan',  '-var-file="input.tfvars"']
+  args: ['plan',  '-var-file=input.tfvars']
 - name: 'gcr.io/${PROJECT_ID}/terraform'
-  args: ['apply', '-auto-approve', '-var-file="input.tfvars"']
+  args: ['apply', '-auto-approve', '-var-file=input.tfvars']
