@@ -30,12 +30,17 @@ fi
 
 GCP_PROJECT=`gcloud config list --format 'value(core.project)' 2>/dev/null`
 if [[ $GCP_PROJECT == '' ]] ; then
-    echo "Please configure a default project, and compute zone in gcloud"     
+    echo "Please configure a default project"     
 fi
 
 GCP_REGION=`gcloud config list --format 'value(compute.region)' 2>/dev/null`
 if [[ $GCP_REGION == '' ]] ; then
     echo "Please configure a default gcp region"     
+fi
+
+GCP_ZONE=`gcloud config list --format 'value(compute.zone)' 2>/dev/null`
+if [[ $GCP_ZONE == '' ]] ; then
+    echo "Please configure a default gcp zone"     
 fi
 
 BUCKET_URL=`gsutil ls gs:// | grep remote-dev-boot-strapper`
@@ -54,6 +59,7 @@ cat > input.tfvars <<EOF
 project_id = "${GCP_PROJECT}"
 remote_dev_boot_strapper_storage_bucket="$BUCKET_NAME"
 compute_region="$GCP_REGION"
+compute_zone="$GCP_ZONE"
 EOF
 
 
@@ -105,8 +111,8 @@ else
      gcloud iam roles update remote_dev_role --project=$GCP_PROJECT --file=remote-dev-custom-role.yaml --quiet
 fi
 
- GENERATED_ROLE_NAME=`gcloud iam roles describe remote_dev_role --project=mconklin --format='value(name)'`
- cloud projects add-iam-policy-binding mconklin --member=$CLOUD_BUILD_SERVICE_ACCOUNT --role=$GENERATED_ROLE_NAME
+ GENERATED_ROLE_NAME=`gcloud iam roles describe remote_dev_role --project=$GCP_PROJECT  --format='value(name)'`
+ cloud projects add-iam-policy-binding $GCP_PROJECT  --member=$CLOUD_BUILD_SERVICE_ACCOUNT --role=$GENERATED_ROLE_NAME
 
 
 
