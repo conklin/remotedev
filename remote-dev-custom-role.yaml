@@ -3,3 +3,4 @@ description: needed remote dev permissions
 stage: ALPHA
 includedPermissions:
 - 'compute.disks.create'
+- 'compute.zoneOperations.get'
