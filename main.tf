@@ -38,7 +38,7 @@ resource "google_compute_disk" "dev_disk" {
   image = data.google_compute_image.dev_image.self_link
   size  = 10
   type  = "pd-ssd"
-  zone  = var.compute_region
+  zone  = var.compute_zone
 }
 
 data "google_compute_image" "dev_image" {
