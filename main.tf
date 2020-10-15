@@ -34,11 +34,11 @@ resource "google_compute_instance_template" "dev_env_server_template" {
 }
 
 resource "google_compute_disk" "dev_disk" {
-  name  = "existing-disk"
+  name  = "dev-server-disk"
   image = data.google_compute_image.dev_image.self_link
   size  = 10
   type  = "pd-ssd"
-  zone  = "us-central1-a"
+  zone  = var.compute_region
 }
 
 data "google_compute_image" "dev_image" {

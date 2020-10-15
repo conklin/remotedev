@@ -76,8 +76,8 @@ fi
 
 echo "a broswer is about is about to open"
 echo "please do the following"
-echo "please add the gcp cloud build app to your git hub account that you used to fork this repo"
-echo "please be sure you added cloud build app to your git hub before continueing"
+echo "please add the gcp cloud build app to your github account that you used to fork this repo"
+echo "please be sure you added cloud build app to your github before continueing"
 echo "please be sure you also accept the terms and conditions in gcp and select gcp project"
 echo "please be sure you connect gcp to the forked remote dev repo"
 echo "please skip defining trigger"
@@ -92,4 +92,22 @@ echo "installing gcloud beta"
 gcloud -q components install beta 
 
 gcloud beta builds triggers create github --repo-name=remotedev --repo-owner=conklin --branch-pattern=".*" --build-config=cloudbuild.yaml
+
+
+CLOUD_BUILD_SERVICE_ACCOUNT=`gcloud projects get-iam-policy $GCP_PROJECT --flatten="bindings[].members" --filter='bindings.role:roles/cloudbuild.builds.builder' --format='value(bindings.members)'`
+
+gcloud iam roles describe remote_dev_role --project=$GCP_PROJECT
+if [[ $? != 0 ]] ; then
+    echo "creating bootstrapper role"
+    gcloud iam roles create remote_dev_role --project=$GCP_PROJECT --file=remote-dev-custom-role.yaml
+else
+     echo "Updating bootstrapper role"
+     gcloud iam roles update remote_dev_role --project=$GCP_PROJECT --file=remote-dev-custom-role.yaml --quiet
+fi
+
+ GENERATED_ROLE_NAME=`gcloud iam roles describe remote_dev_role --project=mconklin --format='value(name)'`
+ cloud projects add-iam-policy-binding mconklin --member=$CLOUD_BUILD_SERVICE_ACCOUNT --role=$GENERATED_ROLE_NAME
+
+
+
 
