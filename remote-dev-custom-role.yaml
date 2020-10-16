@@ -4,3 +4,6 @@ stage: ALPHA
 includedPermissions:
 - 'compute.disks.create'
 - 'compute.zoneOperations.get'
+- 'compute.disks.get'
+- 'compute.instanceTemplates.create'
+- 'compute.networks.get'
