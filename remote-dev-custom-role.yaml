@@ -16,3 +16,7 @@ includedPermissions:
 - 'compute.subnetworks.get'
 - 'compute.subnetworks.delete'
 - 'compute.instanceTemplates.delete'
+- 'compute.routers.create'
+- 'compute.routers.get'
+- 'compute.routers.delete'
+- 'compute.routers.update'
