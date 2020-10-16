@@ -35,17 +35,17 @@ resource "google_compute_instance_template" "dev_env_server_template" {
 
 resource "google_compute_disk" "dev_disk" {
   name  = "dev-server-disk"
-  image = google_compute_image.dev_image.id
+  image = "ubuntu-1804-bionic-v20201014"
   size  = 10
   type  = "pd-ssd"
   zone  = var.compute_zone
 }
 
-resource "google_compute_image" "dev_image" {
-  name = "base-os"  
-  family  = "debian-9"
-  project = "debian-cloud"
-}
+# resource "google_compute_image" "dev_image" {
+#   name = "base-os"  
+#   family  = "debian-9"
+#   project = "debian-cloud"
+# }
 
 
 resource "google_compute_network" "dev-env-network" {
