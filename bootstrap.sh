@@ -97,10 +97,11 @@ read -t 3 -n 1
 echo "installing gcloud beta"
 gcloud -q components install beta 
 
-gcloud beta builds triggers create github --repo-name=remotedev --repo-owner=conklin --branch-pattern=".*" --build-config=cloudbuild.yaml
 
-
-CLOUD_BUILD_SERVICE_ACCOUNT=`gcloud projects get-iam-policy $GCP_PROJECT --flatten="bindings[].members" --filter='bindings.role:roles/cloudbuild.builds.builder' --format='value(bindings.members)'`
+TRIGGER=`gcloud beta builds triggers list --filter='name:remote-dev-bootstrapper-triger' --format='value(name)'`
+if [[ $TRIGGER == '']] ; then
+    gcloud beta builds triggers create github --repo-name=remotedev --repo-owner=conklin --branch-pattern=".*" --build-config=cloudbuild.yaml --name="remote-dev-bootstrapper-triger"
+fi
 
 gcloud iam roles describe remote_dev_role --project=$GCP_PROJECT
 if [[ $? != 0 ]] ; then
@@ -111,8 +112,9 @@ else
      gcloud iam roles update remote_dev_role --project=$GCP_PROJECT --file=remote-dev-custom-role.yaml --quiet
 fi
 
- GENERATED_ROLE_NAME=`gcloud iam roles describe remote_dev_role --project=$GCP_PROJECT  --format='value(name)'`
- cloud projects add-iam-policy-binding $GCP_PROJECT  --member=$CLOUD_BUILD_SERVICE_ACCOUNT --role=$GENERATED_ROLE_NAME
+CLOUD_BUILD_SERVICE_ACCOUNT=`gcloud projects get-iam-policy $GCP_PROJECT --flatten="bindings[].members" --filter='bindings.role:roles/cloudbuild.builds.builder' --format='value(bindings.members)'`
+GENERATED_ROLE_NAME=`gcloud iam roles describe remote_dev_role --project=$GCP_PROJECT  --format='value(name)'`
+cloud projects add-iam-policy-binding $GCP_PROJECT  --member=$CLOUD_BUILD_SERVICE_ACCOUNT --role=$GENERATED_ROLE_NAME
 
 
 
