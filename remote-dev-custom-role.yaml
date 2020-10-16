@@ -8,3 +8,7 @@ includedPermissions:
 - 'compute.instanceTemplates.create'
 - 'compute.networks.get'
 - 'compute.instanceTemplates.get'
+- 'compute.images.create'
+- 'compute.networks.create'
+- 'compute.subnetworks.create'
+- 'compute.networks.updatePolicy'

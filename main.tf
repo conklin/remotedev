@@ -49,7 +49,7 @@ resource "google_compute_image" "dev_image" {
 
 
 resource "google_compute_network" "dev-env-network" {
-  name = "default-us-east1"
+  name = "dev-compute-name"
 }
 
 resource "google_compute_subnetwork" "dev-env-sub-network" {
