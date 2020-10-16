@@ -7,3 +7,4 @@ includedPermissions:
 - 'compute.disks.get'
 - 'compute.instanceTemplates.create'
 - 'compute.networks.get'
+- 'compute.instanceTemplates.get'
