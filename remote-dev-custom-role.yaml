@@ -12,3 +12,4 @@ includedPermissions:
 - 'compute.networks.create'
 - 'compute.subnetworks.create'
 - 'compute.networks.updatePolicy'
+- 'compute.images.get'

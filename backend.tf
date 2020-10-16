@@ -1,8 +1,8 @@
-data "terraform_remote_state" "state" {
-  backend = "gcs"
-  config = {
+terraform {
+  backend "gcs" {
+   config = {
     prefix  = "terraform/state"
-    bucket  = var.remote_dev_boot_strapper_storage_bucket
+    bucket  = "remote-dev-boot-strapper-2ca89e63a0d6"
+    }
   }
 }
-
