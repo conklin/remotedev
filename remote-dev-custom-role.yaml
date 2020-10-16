@@ -13,3 +13,6 @@ includedPermissions:
 - 'compute.subnetworks.create'
 - 'compute.networks.updatePolicy'
 - 'compute.images.get'
+- 'compute.subnetworks.get'
+- 'compute.subnetworks.delete'
+- 'compute.instanceTemplates.delete'
