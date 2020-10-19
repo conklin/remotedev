@@ -1,6 +1,7 @@
 provider "google" {
-  project     = var.project_id
-  region      = var.compute_region
+  project = var.project_id
+  region = var.compute_region
+  zone = var.compute_zone
 }
 
 resource "google_compute_instance_template" "dev_env_server_template" {
@@ -84,7 +85,6 @@ resource "google_compute_router_nat" "nat" {
     filter = "ERRORS_ONLY"
   }
 }
-
 
 resource "google_compute_firewall" "default" {
   name    = "test-firewall"
