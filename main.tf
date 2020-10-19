@@ -48,6 +48,12 @@ resource "google_compute_disk" "dev_disk" {
 # }
 
 
+resource "google_compute_instance_from_template" "dev_server_instance" {
+  name = "dev-server"
+  source_instance_template = google_compute_instance_template.dev_env_server_template.id
+}
+
+
 resource "google_compute_network" "dev-env-network" {
   name = "dev-compute-name"
 }
@@ -63,6 +69,7 @@ resource "google_compute_subnetwork" "dev-env-sub-network" {
 resource "google_compute_router" "router" {
   name    = "my-router"
   network = google_compute_network.dev-env-network.name
+  region  = google_compute_subnetwork.subnet.region
 }
 
 resource "google_compute_router_nat" "nat" {
@@ -76,4 +83,33 @@ resource "google_compute_router_nat" "nat" {
     enable = true
     filter = "ERRORS_ONLY"
   }
+}
+
+resource "google_project_service" "enable_identity_aware_proxy" {
+  service = "iap.googleapis.com"
+}
+
+
+resource "google_compute_firewall" "default" {
+  name    = "test-firewall"
+  network = google_compute_network.dev-env-network.name
+  
+  # https://cloud.google.com/iap/docs/using-tcp-forwarding#before_you_begin  
+  source_ranges = ["35.235.240.0/20"]
+
+  allow {
+    protocol = "tcp"
+    ports    = ["80", "8080", "22"]
+  }
+}
+
+resource "google_iap_brand" "project_brand" {
+  support_email     = var.iap_members[0]
+  application_title = "Cloud IAP protected Application"
+}
+
+resource "google_iap_tunnel_instance_iam_binding" "enable_iap" {  
+  instance = google_compute_instance_from_template.dev_server_instance.name
+  role     = "roles/iap.tunnelResourceAccessor"
+  members  = var.iap_members
 }

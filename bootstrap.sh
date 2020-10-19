@@ -54,12 +54,13 @@ regex='\/\/(.*)\/'
 [[ $BUCKET_URL =~ $regex ]]
 BUCKET_NAME=${BASH_REMATCH[1]}
 
-
+MEMBER=`gcloud config get-value account`
 cat > input.tfvars <<EOF
 project_id = "${GCP_PROJECT}"
 remote_dev_boot_strapper_storage_bucket="$BUCKET_NAME"
 compute_region="$GCP_REGION"
 compute_zone="$GCP_ZONE"
+iap_members=["$MEMBER"]
 EOF
 
 
@@ -76,9 +77,6 @@ if [[ $TERRAFORM_IMAGE == '' ]] ; then
     gcloud builds submit --config cloudbuild.yaml .
     cd ../../
 fi
-
-
-
 
 echo "a broswer is about is about to open"
 echo "please do the following"
@@ -99,7 +97,7 @@ gcloud -q components install beta
 
 
 TRIGGER=`gcloud beta builds triggers list --filter='name:remote-dev-bootstrapper-triger' --format='value(name)'`
-if [[ $TRIGGER == '']] ; then
+if [[ $TRIGGER == '' ]] ; then
     gcloud beta builds triggers create github --repo-name=remotedev --repo-owner=conklin --branch-pattern=".*" --build-config=cloudbuild.yaml --name="remote-dev-bootstrapper-triger"
 fi
 
@@ -114,7 +112,7 @@ fi
 
 CLOUD_BUILD_SERVICE_ACCOUNT=`gcloud projects get-iam-policy $GCP_PROJECT --flatten="bindings[].members" --filter='bindings.role:roles/cloudbuild.builds.builder' --format='value(bindings.members)'`
 GENERATED_ROLE_NAME=`gcloud iam roles describe remote_dev_role --project=$GCP_PROJECT  --format='value(name)'`
-cloud projects add-iam-policy-binding $GCP_PROJECT  --member=$CLOUD_BUILD_SERVICE_ACCOUNT --role=$GENERATED_ROLE_NAME
+gcloud projects add-iam-policy-binding $GCP_PROJECT  --member=$CLOUD_BUILD_SERVICE_ACCOUNT --role=$GENERATED_ROLE_NAME
 
 
 
