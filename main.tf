@@ -107,5 +107,5 @@ resource "google_compute_firewall" "default" {
 resource "google_iap_tunnel_instance_iam_binding" "enable_iap" {  
   instance = google_compute_instance_from_template.dev_server_instance.name
   role     = "roles/iap.tunnelResourceAccessor"
-  members  = var.iap_members
+  members = formatlist("user:%s", var.iap_members)
 }
