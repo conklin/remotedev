@@ -69,7 +69,7 @@ resource "google_compute_subnetwork" "dev-env-sub-network" {
 resource "google_compute_router" "router" {
   name    = "my-router"
   network = google_compute_network.dev-env-network.name
-  region  = google_compute_subnetwork.subnet.region
+  region  = google_compute_subnetwork.dev-env-sub-network.region
 }
 
 resource "google_compute_router_nat" "nat" {
