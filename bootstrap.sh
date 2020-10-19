@@ -67,6 +67,9 @@ EOF
 echo "enabling cloud build apis"
 gcloud services enable cloudbuild.googleapis.com
 
+echo "enable iap"
+gcloud services enable iap.googleapis.com
+
 TERRAFORM_IMAGE=`gcloud container images list --filter terraform`
 if [[ $TERRAFORM_IMAGE == '' ]] ; then
     echo "building terraform gcp community builder and publishing"

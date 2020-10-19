@@ -85,10 +85,6 @@ resource "google_compute_router_nat" "nat" {
   }
 }
 
-resource "google_project_service" "enable_identity_aware_proxy" {
-  service = "iap.googleapis.com"
-}
-
 
 resource "google_compute_firewall" "default" {
   name    = "test-firewall"

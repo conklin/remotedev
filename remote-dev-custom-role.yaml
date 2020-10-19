@@ -20,3 +20,6 @@ includedPermissions:
 - 'compute.routers.get'
 - 'compute.routers.delete'
 - 'compute.routers.update'
+- 'compute.firewalls.create'
+- 'compute.firewalls.get'
+- 'compute.firewalls.delete'
