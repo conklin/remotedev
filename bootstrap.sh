@@ -97,6 +97,7 @@ read -t 3 -n 1
 
 echo "installing gcloud beta"
 gcloud -q components install beta 
+ gcloud -q components install alpha
 
 
 TRIGGER=`gcloud beta builds triggers list --filter='name:remote-dev-bootstrapper-triger' --format='value(name)'`
